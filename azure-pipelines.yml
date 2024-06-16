@@ -1,15 +1,8 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - master
 
 pool:
   name: 'webgoat-agent'
-
-
 
 steps:
 - task: Maven@3
@@ -17,30 +10,30 @@ steps:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '11'  # Specify the JDK version here, adjust as necessary
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
-- task:                  CopyPublishBuildArtifacts@1
+- task: CopyFiles@2
   inputs:
-    Contents:           '**/target/*.jar'
-    ArtifactName:       'groot-artifact'
-    ArtifactType:       'Container'
-    TargetPath:         "$(Build.ArtifactStagingDirectory)"
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '**/target/*.jar'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish:      '$(Build.ArtifactStagingDirectory)'
-    ArtifactName:       'groot-artifact'
-    publishLocation:    'Container' # means upload artifact in azure pipelines#
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'groot-artifact'
+    publishLocation: 'Container'
 
-- task: DownloadBuildArtifacts@1
-  displayName:  "successfully downloaded"
+- task: DownloadPipelineArtifact@2
+  displayName: "Download Build Artifacts"
   inputs:
     buildType: 'current'
-    downloadType: 'single'
-    downloadPath: '$(pipeline.workspace)'
+    artifactName: 'groot-artifact'
+    path: '$(Pipeline.Workspace)/groot_artifact'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
