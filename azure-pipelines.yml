@@ -48,5 +48,5 @@ steps:
     azureSubscription: 'Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)'
     appType: 'webAppLinux'
     WebAppName: 'webgoattest'
-    packageForLinux: '$(Pipeline.Workspace)/webgoat_artifact/**/*.jar'
+    packageForLinux: '$(Pipeline.Workspace)/groot_artifact/**/*.jar'
     RuntimeStack: 'JAVA|21-java21'
