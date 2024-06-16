@@ -34,3 +34,19 @@ steps:
     PathtoPublish:      '$(Build.ArtifactStagingDirectory)'
     ArtifactName:       'groot-artifact'
     publishLocation:    'Container' # means upload artifact in azure pipelines#
+
+- task: DownloadBuildArtifacts@1
+  displayName:  "successfully downloaded"
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    downloadPath: '$(pipeline.workspace)'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)'
+    appType: 'webAppLinux'
+    WebAppName: 'webgoattest'
+    packageForLinux: '$(Pipeline.Workspace)/webgoat_artifact/**/*.jar'
+    RuntimeStack: 'JAVA|21-java21'
