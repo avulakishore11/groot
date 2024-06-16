@@ -9,6 +9,8 @@ trigger:
 pool:
   name: 'webgoat-agent'
 
+
+
 steps:
 - task: Maven@3
   inputs:
@@ -19,3 +21,16 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+- task:                  CopyPublishBuildArtifacts@1
+  inputs:
+    Contents:           '**/target/*.jar'
+    ArtifactName:       'groot-artifact'
+    ArtifactType:       'Container'
+    TargetPath:         "$(Build.ArtifactStagingDirectory)"
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish:      '$(Build.ArtifactStagingDirectory)'
+    ArtifactName:       'groot-artifact'
+    publishLocation:    'Container' # means upload artifact in azure pipelines#
