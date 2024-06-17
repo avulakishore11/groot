@@ -4,40 +4,55 @@ trigger:
 pool:
   name: 'webgoat-agent'
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+variables:
+ subscription: "Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)"
+ appName:       "webgoattest"
 
-- task: CopyFiles@2
-  inputs:
-    Contents: '**/target/*.?(jar|war)'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+stages:
+- stage: Build
+  jobs:
+  - job: Buildjob
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'groot-artifact'
-    publishLocation: 'Container'
+    - task: CopyFiles@2
+      inputs:
+        Contents: '**/target/*.?(jar|war)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: DownloadPipelineArtifact@2
-  displayName: "Download Build Artifacts"
-  inputs:
-    buildType: 'current'
-    artifactName: 'groot-artifact'
-    path: '$(Pipeline.Workspace)/groot_artifact'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'groot-artifact'
+        publishLocation: 'Container'
 
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)'
-    appType: 'webAppLinux'
-    WebAppName: 'webgoattest'
-    packageForLinux: '$(Pipeline.Workspace)/groot_artifact/target/**.?(jar|war)'
-    RuntimeStack: 'JAVA|21-java21'
+
+
+  
+ 
+  - job: Deploymentjob
+    dependsOn: Buildjob
+    steps:
+      
+      - task: DownloadPipelineArtifact@2
+        displayName: "Download Build Artifacts"
+        inputs:
+          buildType: 'current'
+          artifactName: 'groot-artifact'
+          path: '$(Pipeline.Workspace)/groot_artifact'
+
+
+      - task: AzureWebApp@1
+        inputs:
+          azureSubscription: $(subscription)
+          appType:           'webApp'
+          appName:            $(appName)
+          package:            '$(Build.ArtifactStagingDirectory)/*.?(jar|war)'  
