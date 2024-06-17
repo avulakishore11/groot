@@ -17,8 +17,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/target/*.zip'
+    Contents: '**/target/*.?(jar|war)'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
@@ -40,5 +39,5 @@ steps:
     azureSubscription: 'Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)'
     appType: 'webAppLinux'
     WebAppName: 'webgoattest'
-    packageForLinux: '$(Pipeline.Workspace)/groot_artifact/target/*.zip'
+    packageForLinux: '$(Pipeline.Workspace)/groot_artifact/target/*.?(jar|war)'
     RuntimeStack: 'JAVA|21-java21'
