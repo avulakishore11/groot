@@ -1,0 +1,55 @@
+trigger:
+- main
+
+pool:
+  name: 'webgoat-agent'
+
+stages:
+- stage: 'Build'
+  jobs:
+  - job: BuildJob
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: '**/target/*.?(war|jar)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: 'PublishBuildArtifacts@1'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'groot-artifact'
+        publishLocation: 'Container'
+
+- stage: 'Deployment'
+  dependsOn: Build
+  jobs:
+  - job: DeployJob
+    steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: "Download Build Artifacts"
+      inputs:
+        buildType: 'current'
+        artifactName: 'groot-artifact'
+        downloadPath: '$(Pipeline.Workspace)/groot_artifact'
+
+    - task: AzureRmWebAppDeployment@4
+      displayName: Deploy to Azure Web App
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)'
+        appType: 'webAppLinux'
+        WebAppName: 'webgoattest'
+        packageForLinux: '$(Pipeline.Workspace)/groot_artifact/*.?(war|jar)'
+        RuntimeStack: 'JAVA|21-java21'
