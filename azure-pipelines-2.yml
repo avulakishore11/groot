@@ -6,6 +6,11 @@
 trigger:
 - master
 
+
+variables:
+    javaVersion: '1.8.0_412'
+    jdkDirectory: '/opt/jdk1.8.0_412'
+
 pool:
   name: 'pool2'
 
