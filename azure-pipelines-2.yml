@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  name: 'pool1'
+  name: 'pool2'
 
 steps:
 - task: Maven@3
