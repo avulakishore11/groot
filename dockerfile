@@ -11,4 +11,4 @@ COPY . .
 
 # build the actual application once its copies the entire code inot container
 
-RUN mvn package
+RUN mvn clean package
