@@ -7,7 +7,7 @@ WORKDIR /app
 
 # copy the all maven dependencies 
 
-COPY . .
+COPY */pom.xml .
 
 # build the actual application once its copies the entire code inot container
 
