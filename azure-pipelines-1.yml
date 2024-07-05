@@ -9,8 +9,8 @@ trigger:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'webgoat-dcr'
-  imageRepository: 'groot'
+  dockerRegistryServiceConnection: 'acrsvcconnection'
+  imageRepository: 'groot-image'
   containerRegistry: 'webgaotdocker.azurecr.io'
   dockerfilePath: '**/dockerfile'
   tag: 'V1.0'
