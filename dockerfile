@@ -17,6 +17,9 @@ RUN mvn clean package
 
 FROM eclipse-temurin:11-jre
 
+# set up the user
+RUN useradd -ms /bin/bash azureuser
+
 # set the working directory
 WORKDIR /home/azureuser
 
@@ -37,5 +40,5 @@ USER azureuser
 
 # run the application
 
-CMD [" "java", "-jar", "/home/azureuser/**.jar"]
+CMD [" "java", "-jar", "/home/azureuser/app.jar"]
 
