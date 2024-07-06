@@ -1,0 +1,42 @@
+trigger:
+- main
+
+pool:
+  name: 'webgaot-pool'
+
+variables:
+  STORAGE_ACCOUNT_NAME: 'imagescanreport'
+  STORAGE_CONTAINER_NAME: 'iscanreportcontainer'
+  IMAGE_NAME: 'ACRimagesreg.azurecr.io/groot-image:V1.0'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'sa-svc'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Install Trivy
+      	 sudo apt-get install wget apt-transport-https gnupg lsb-release
+         wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+         echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+         sudo apt-get update
+         sudo apt-get install trivy
+         trivy -v
+         pwd
+
+      # Log in to Azure Container Registry
+      az acr login --name ACRimagesreg 
+
+      # Pull the image
+      docker pull $(IMAGE_NAME)
+
+      # Run Trivy scan
+      trivy image --exit-code 0 --format json --output trivy_report.json $(IMAGE_NAME)
+
+      # Upload the report to Azure Storage
+      az storage blob upload --account-name $(STORAGE_ACCOUNT_NAME) --container-name $(STORAGE_CONTAINER_NAME) --name trivy_report.json --file trivy_report.json --auth-mode key --account-key $(STORAGE_ACCOUNT_KEY)
+      
+      echo "Scan report uploaded to Azure Storage account."
+  env:
+    STORAGE_ACCOUNT_KEY: $(STORAGE_ACCOUNT_KEY)
