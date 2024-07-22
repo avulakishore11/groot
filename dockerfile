@@ -7,7 +7,11 @@ WORKDIR /app
 
 # copy the all maven dependencies 
 
-COPY . .
+COPY pom.xml /app/src
+
+# copy the rest of source code
+
+COPY . /app/src
 
 # build the actual application once its copies the entire code inot container
 
@@ -24,21 +28,21 @@ RUN useradd -ms /bin/bash azureuser
 WORKDIR /home/azureuser
 
 # set the permissions for the azureuser
-RUN chgrp -R 0 /home/azureuser && \
-    chmod -R g=u /home/azureuser 
+# RUN chgrp -R 0 /home/azureuser && \
+    # chmod -R g=u /home/azureuser 
 
 # copy the jar file from the Build stage. 
-COPY --from=builder /app/target/groot-4.0.4-SNAPSHOT-jar-with-dependencies.jar /home/azureuser
+# COPY --from=builder /app/target/groot-4.0.4-SNAPSHOT-jar-with-dependencies.jar /home/azureuser
 
 # exposing the application port
 
-EXPOSE 8080
+# EXPOSE 8080
 
 # change the azureuser
 
-USER azureuser
+# USER azureuser
 
 # run the application
 
-CMD [" "java", "-jar", "/home/azureuser/app.jar"]
+# CMD [" "java", "-jar", "/home/azureuser/app.jar"]
 
