@@ -11,7 +11,7 @@ COPY pom.xml /app/src
 
 # copy the rest of source code
 
-COPY . /app/src
+COPY . .
 
 # build the actual application once its copies the entire code inot container
 
