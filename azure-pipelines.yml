@@ -2,11 +2,7 @@ trigger:
 - master
 
 pool:
-  name: 'webgoat-agent'
-
-variables:
- subscription: "Free Trial(02dd8a70-8b78-44e2-bb9e-56d6e1188f39)"
- appName:       "webgoattest"
+  name: 'k8s-pool'
 
 stages:
 - stage: Build
@@ -25,34 +21,41 @@ stages:
 
     - task: CopyFiles@2
       inputs:
-        Contents: '**/target/*.?(jar|war)'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        contents: '**/target/*.war'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'groot-artifact'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'groot-artifact'
         publishLocation: 'Container'
 
+- stage: Deployment
+  dependsOn: Build
+  jobs:
+  - deployment: DeploymentJob
+    environment: 'Dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Build Artifacts"
+            inputs:
+              buildType: 'current'
+              artifactName: 'groot-artifact'
+              path: '$(Pipeline.Workspace)/groot_artifact'
 
-
-  
- 
-  - job: Deploymentjob
-    dependsOn: Buildjob
-    steps:
-      
-      - task: DownloadPipelineArtifact@2
-        displayName: "Download Build Artifacts"
-        inputs:
-          buildType: 'current'
-          artifactName: 'groot-artifact'
-          path: '$(Pipeline.Workspace)/groot_artifact'
-
-
-      - task: AzureWebApp@1
-        inputs:
-          azureSubscription: $(subscription)
-          appType:           'webApp'
-          appName:            $(appName)
-          package:            '$(Build.ArtifactStagingDirectory)/*.?(jar|war)'  
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'svc-connection1'
+              appType: 'webAppLinux'
+              WebAppName: 'nikeorders'
+              packageForLinux: '$(Pipeline.Workspace)/groot_artifact/**/*.war'
+              RuntimeStack: 'JBOSSEAP|7-java8'
+              
+    preDeployApprovals:
+      - approvals: # Define the approvers
+          - approvers: 
+              - 'aptnaidu8260265'
