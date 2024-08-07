@@ -49,13 +49,13 @@ stages:
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
-              azureSubscription: 'svc-connection1'
+              azureSubscription: 'svc-coonection1'
               appType: 'webAppLinux'
               WebAppName: 'nikeorders'
               packageForLinux: '$(Pipeline.Workspace)/groot_artifact/**/*.war'
               RuntimeStack: 'JBOSSEAP|7-java8'
               
-    preDeployApprovals:
-      - approvals: # Define the approvers
-          - approvers: 
-              - 'aptnaidu8260265'
+   # preDeployApprovals:
+      #- approvals: # Define the approvers
+         # - approvers: 
+              #- 'aptnaidu8260265'
