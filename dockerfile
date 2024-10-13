@@ -44,5 +44,5 @@ EXPOSE 8080
 
 # run the application
 
-# CMD [" "java", "-jar", "/home/azureuser/app.jar"]
+# CMD [" "java", "-jar", ".jar"]
 
