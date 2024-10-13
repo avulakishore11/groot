@@ -7,7 +7,7 @@ WORKDIR /app
 
 # copy the all maven dependencies 
 
-COPY pom.xml /app/src
+
 
 # copy the rest of source code
 
@@ -22,21 +22,21 @@ RUN mvn clean package
 FROM eclipse-temurin:11-jre
 
 # set up the user
-RUN useradd -ms /bin/bash azureuser
+# RUN useradd -ms /bin/bash azureuser
 
 # set the working directory
-WORKDIR /home/azureuser
+WORKDIR /app
 
 # set the permissions for the azureuser
 # RUN chgrp -R 0 /home/azureuser && \
     # chmod -R g=u /home/azureuser 
 
 # copy the jar file from the Build stage. 
-# COPY --from=builder /app/target/groot-4.0.4-SNAPSHOT-jar-with-dependencies.jar /home/azureuser
+COPY --from=builder /app ./
 
 # exposing the application port
 
-# EXPOSE 8080
+EXPOSE 8080
 
 # change the azureuser
 
