@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  name: 'k8s-pool'
+  name: 'Azure Pipelines'
   demands:
   - maven
 
@@ -20,41 +20,42 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
-    - task: CopyFiles@2
-      inputs:
-        contents: '**/target/*.war'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
+# - task: CopyFiles@2
+#   inputs:
+#     contents: '**/target/*.war'
+#     targetFolder: '$(Build.ArtifactStagingDirectory)'
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        artifactName: 'groot-artifact'
-        publishLocation: 'Container'
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     artifactName: 'groot-artifact'
+#     publishLocation: 'Container'
 
-- stage: Deployment
-  dependsOn: Build
-  jobs:
-  - deployment: DeploymentJob
-    environment: 'Dev'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: "Download Build Artifacts"
-            inputs:
-              buildType: 'current'
-              artifactName: 'groot-artifact'
-              path: '$(Pipeline.Workspace)/groot_artifact'
+# - stage: Deployment
+#   dependsOn: Build
+#   jobs:
+#   - deployment: DeploymentJob
+#     environment: 'Dev'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - task: DownloadPipelineArtifact@2
+#             displayName: "Download Build Artifacts"
+#             inputs:
+#               buildType: 'current'
+#               artifactName: 'groot-artifact'
+#               path: '$(Pipeline.Workspace)/groot_artifact'
 
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'svc-coonection1'
-              appType: 'webAppLinux'
-              WebAppName: 'nikeorders'
-              packageForLinux: '$(Pipeline.Workspace)/groot_artifact/**/*.war'
-              RuntimeStack: 'JBOSSEAP|7-java8'
+#           - task: AzureRmWebAppDeployment@4
+#             inputs:
+#               ConnectionType: 'AzureRM'
+#               azureSubscription: 'svc-coonection1'
+#               appType: 'webAppLinux'
+#               WebAppName: 'nikeorders'
+#               packageForLinux: '$(Pipeline.Workspace)/groot_artifact/**/*.war'
+#               RuntimeStack: 'JBOSSEAP|7-java8'
+
               
    # preDeployApprovals:
       #- approvals: # Define the approvers
