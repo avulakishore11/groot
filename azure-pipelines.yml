@@ -3,6 +3,7 @@ trigger:
 
 pool:
   name: 'pool-1'
+  demands: 'maven'
 
 stages:
 - stage: Build
