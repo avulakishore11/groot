@@ -81,6 +81,16 @@
             <id>freehep-repo-public</id>
             <url>https://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
         </repository>
+	<repository>
+	  <id>jeniusbank-payment</id>
+	  <url>https://pkgs.dev.azure.com/jeniusbank-payment/_packaging/jeniusbank-payment/maven/v1</url>
+	  <releases>
+	    <enabled>true</enabled>
+	  </releases>
+	  <snapshots>
+	    <enabled>true</enabled>
+	  </snapshots>
+	</repository>
     </repositories>
 
 
@@ -137,7 +147,18 @@
             <id>ssh-clasweb</id>
             <url>scpexe://clas12@jlabl1.jlab.org/group/clas/www/clasweb/html/clas12maven</url>
         </repository>
+	<repository>
+		  <id>jeniusbank-payment</id>
+		  <url>https://pkgs.dev.azure.com/jeniusbank-payment/_packaging/jeniusbank-payment/maven/v1</url>
+		  <releases>
+		    <enabled>true</enabled>
+		  </releases>
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+    	 </repository>
     </distributionManagement>
+  
 <!--
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
