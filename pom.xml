@@ -146,8 +146,6 @@
         <repository>
             <id>groot-maven-feed</id>
             <url>https://pkgs.dev.azure.com/jeniusbank-payment/_packaging/jeniusbank-payment/maven/v1</url>
-	    <!-- <id>ssh-clasweb</id>
-            <!-- <url>scpexe://clas12@jlabl1.jlab.org/group/clas/www/clasweb/html/clas12maven</url>
         </repository>
     </distributionManagement>
   
