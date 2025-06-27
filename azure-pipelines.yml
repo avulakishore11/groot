@@ -11,6 +11,7 @@ stages:
   - job: Buildjob
     steps:
     - task: Maven@3
+      displayName: 'Build Maven Project'
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m'
@@ -18,6 +19,19 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
+
+    - task: MavenAuthenticate@0
+      displayName: 'Authenticate to Azure Artifacts Feed'
+      inputs:
+        artifactsFeeds: 'groot-maven-feed'
+
+    - task: Maven@3
+      displayName: 'Deploy to Azure Artifacts'
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'deploy'
+
+
 
 # - task: CopyFiles@2
 #   inputs:
