@@ -23,7 +23,7 @@ stages:
     - task: MavenAuthenticate@0
       displayName: 'Authenticate to Azure Artifacts Feed'
       inputs:
-        artifactsFeeds: 'groot-maven-feed'
+        artifactsFeeds: 'jeniusbank-payment'
 
     - task: Maven@3
       displayName: 'Deploy to Azure Artifacts'
