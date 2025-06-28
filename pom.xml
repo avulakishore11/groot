@@ -144,8 +144,8 @@
 
     <distributionManagement>
         <repository>
-            <id>jeniusbank-payment</id>
-            <url>https://pkgs.dev.azure.com/jeniusbank-payment/_packaging/jeniusbank-payment/maven/v1</url>
+             <id>groot-maven-feed</id>
+	     <url>https://pkgs.dev.azure.com/jeniusbank-payment/payment/_packaging/groot-maven-feed/maven/v1</url>
         </repository>
     </distributionManagement>
   
