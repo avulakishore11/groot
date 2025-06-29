@@ -9,7 +9,7 @@ variables:
   dockerRegistryServiceConnection: 'docker-auth-svc-principal'  # Replace with actual service connection name
   imageRepository: 'avulakishore99/groot-image'
   containerRegistry: 'https://index.docker.io/v1/'
-  dockerfilePath: '**/Dockerfile'  # Case-sensitive
+  dockerfilePath: 'dockerfile'  # Case-sensitive
   tag: 'V1.0'
 
 stages:
