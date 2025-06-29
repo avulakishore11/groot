@@ -22,14 +22,14 @@ RUN mvn clean package
 FROM eclipse-temurin:11-jre
 
 # set up the user
-# RUN useradd -ms /bin/bash azureuser
+RUN useradd -ms /bin/bash cloud_user
 
 # set the working directory
 WORKDIR /app
 
 # set the permissions for the azureuser
-# RUN chgrp -R 0 /home/azureuser && \
-    # chmod -R g=u /home/azureuser 
+ RUN chgrp -R 0 /home/cloud_user && \
+ chmod -R g=u /home/cloud_user 
 
 # copy the jar file from the Build stage. 
 COPY --from=builder /app ./
@@ -44,5 +44,5 @@ EXPOSE 8080
 
 # run the application
 
-# CMD [" "java", "-jar", "groot.jar"]
+CMD [" "java", "-jar", "groot.jar"]
 
