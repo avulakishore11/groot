@@ -5,30 +5,24 @@
 trigger:
 - master
 
-
-
-variables 
-# Container registry service connection established during pipeline creation
-dockerRegistryServiceConnection: 'docker-auth-svc-principal'  # This should be the name of the Docker Hub service connection you created
-imageRepository: 'avulakishore99/groot-image'  # Follows the Docker Hub naming convention: <username>/<repo>
-containerRegistry: 'https://index.docker.io/v1/'  # Required for Docker Hub
-dockerfilePath: 'dockerfile'
-tag: 'V1.0'
-
-
-  
+variables:
+  dockerRegistryServiceConnection: 'docker-auth-svc-principal'  # Replace with actual service connection name
+  imageRepository: 'avulakishore99/groot-image'
+  containerRegistry: 'https://index.docker.io/v1/'
+  dockerfilePath: '**/Dockerfile'  # Case-sensitive
+  tag: 'V1.0'
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and Push Stage
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Build and Push to Docker Hub
     pool:
       name: 'pool-1'
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build and push an image to Docker Hub
       inputs:
         command: buildAndPush
         repository: $(imageRepository)
