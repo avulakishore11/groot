@@ -9,11 +9,12 @@ trigger:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'acrsvcconnection'
-  imageRepository: 'groot-image'
-  containerRegistry: 'webgaotdocker.azurecr.io'
-  dockerfilePath: '**/dockerfile'
-  tag: 'V1.0'
+dockerRegistryServiceConnection: 'docker-auth-svc-principal'  # This should be the name of the Docker Hub service connection you created
+imageRepository: 'avulakishore99/groot-image'  # Follows the Docker Hub naming convention: <username>/<repo>
+containerRegistry: 'https://index.docker.io/v1/'  # Required for Docker Hub
+dockerfilePath: '**/dockerfile'
+tag: 'V1.0'
+
 
   
 
@@ -24,7 +25,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      name: 'webgaot-pool'
+      name: 'pool-1'
     steps:
     - task: Docker@2
       displayName: Build and push an image to container registry
