@@ -32,7 +32,13 @@ WORKDIR /app
  chmod -R g=u /home/cloud_user 
 
 # copy the jar file from the Build stage. 
-COPY --from=builder /app ./
+# writng this making trouble to run the iamge COPY --from=builder /app ./
+
+# Copy the built JAR only
+# COPY --from=builder /app/target/*.jar app.jar
+
+COPY --from=builder /app/target/groot-4.0.4-SNAPSHOT-jar-with-dependencies.jar app.jar
+
 
 # exposing the application port
 
