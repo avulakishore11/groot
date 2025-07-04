@@ -50,5 +50,6 @@ EXPOSE 8080
 
 # run the application
 
-CMD ["java", "-jar", "groot.jar"]
+## made a mistake CMD ["java", "-jar", "groot.jar"]
+CMD ["java", "-jar", "app.jar"]
 
